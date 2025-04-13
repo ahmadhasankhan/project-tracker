@@ -1,0 +1,74 @@
+<% content_for :title, @project.name %>
+
+<div class="max-w-4xl mx-auto space-y-8">
+  <!-- Header -->
+  <div class="flex justify-between items-center">
+    <h1 class="text-3xl font-bold text-gray-900"><%= @project.name %></h1>
+    <div class="space-x-2">
+      <%= link_to "Edit", edit_project_path(@project), class: "px-4 py-2 text-sm bg-yellow-100 hover:bg-yellow-200 rounded" %>
+      <%= link_to "Back", projects_path, class: "px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded" %>
+    </div>
+  </div>
+
+  <!-- Project Info -->
+  <div class="bg-white p-6 rounded-lg shadow space-y-3">
+    <p class="text-gray-700">
+      <span class="font-medium">Status:</span>
+      <span class="inline-block px-2 py-1 rounded text-xs font-medium text-white
+        <%= case @project.status
+            when 'pending' then 'bg-yellow-500'
+            when 'in_progress' then 'bg-blue-500'
+            when 'completed' then 'bg-green-600'
+            else 'bg-gray-400'
+            end %>">
+        <%= @project.status.titleize %>
+      </span>
+    </p>
+
+    <p class="text-sm text-gray-500">Created on: <%= @project.created_at.strftime("%B %d, %Y") %></p>
+  </div>
+
+  <!-- Status Update -->
+  <div class="bg-white p-6 rounded-lg shadow">
+    <h2 class="text-lg font-semibold mb-4">Update Status</h2>
+    <%= form_with model: @project, url: project_path(@project), method: :patch, class: "flex space-x-4 items-center" do |form| %>
+      <%= form.select :status, Project.statuses.keys.map { |s| [s.titleize, s] }, {}, class: "px-3 py-2 border rounded w-60" %>
+      <%= form.submit "Update", class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" %>
+    <% end %>
+  </div>
+
+  <!-- Add Comment -->
+  <div class="bg-white p-6 rounded-lg shadow">
+    <h2 class="text-lg font-semibold mb-4">Add Comment</h2>
+    <%= form_with model: [@project, Comment.new], local: true do |form| %>
+      <div class="space-y-4">
+        <%= form.text_area :content, rows: 3, placeholder: "Write a comment...", class: "w-full p-3 border rounded" %>
+        <%= form.submit "Post Comment", class: "bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Conversation History -->
+  <div class="bg-white p-6 rounded-lg shadow">
+    <h2 class="text-lg font-semibold mb-4">Conversation History</h2>
+    <% if @project.full_history.any? %>
+      <ul class="space-y-4">
+        <% @project.full_history.each do |history| %>
+          <li class="border-b pb-3">
+            <% if history.is_a?(Comment) %>
+              <p class="text-gray-800"><%= history.content %></p>
+              <p class="text-sm text-gray-500 mt-1">by: <strong><%= history.user.email %></strong> at: <%= history.created_at.strftime("%B %d, %Y at %I:%M %p") %> </p>
+            <% elsif history.is_a?(ProjectHistory) %>
+              <p class="text-gray-800">
+                status changed from <strong><%= history.from_status %></strong> to <strong><%= history.to_status %></strong>
+              </p>
+              <p class="text-sm text-gray-500 mt-1">by: <strong><%= history.user.email %></strong> at: <%= history.created_at.strftime("%B %d, %Y at %I:%M %p") %> </p>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-gray-500">No comments or status updates yet.</p>
+    <% end %>
+  </div>
+</div>
