@@ -6,7 +6,7 @@ class Project < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_many :project_histories, dependent: :destroy
 
-  validates :name, :status, presence: true/.p,omjnbhgvfcdxwsqa  gcin moexty no.c mp/
+  validates :name, :status, presence: true
 
   def full_history
     (comments + project_histories).sort_by(&:created_at).reverse
