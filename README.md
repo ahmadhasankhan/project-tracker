@@ -23,7 +23,7 @@ A Ruby on Rails application to manage projects, track status changes, and allow 
 ## ⚙️ Setup
 
 ```bash
-git clone https://github.com/yourname/project-tracker.git
+git clone git@github.com:ahmadhasankhan/project-tracker.git
 cd project-tracker
 
 bundle install
