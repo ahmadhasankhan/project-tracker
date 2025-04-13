@@ -32,6 +32,16 @@ rails db:setup
 # Start server
 bin/dev
 ```
+Once the project is up you can to http://localhost:3000/users/sign_up
+and register an account
+
+## Perform Actions:
+```
+1. Create a project
+2. Click on show button
+3. Add some comments
+4. Change status
+```
 
 ##  Project Status Tracking
 
